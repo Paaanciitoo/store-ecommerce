@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { Category } from "@/types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from 'lucide-react';
+import { Menu, X } from "lucide-react";
 
 interface MainNavProps {
   data: Category[];
@@ -27,13 +27,13 @@ const MainNav: React.FC<MainNavProps> = ({ data }) => {
 
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
 
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [isOpen]);
 
@@ -41,12 +41,6 @@ const MainNav: React.FC<MainNavProps> = ({ data }) => {
     <nav className="relative w-full bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex-shrink-0 flex items-center">
-            <Link href="/" className="text-xl font-bold">
-              Logo
-            </Link>
-          </div>
-
           <div className="hidden md:flex items-center space-x-4">
             {routes.map((route) => (
               <Link
@@ -78,7 +72,11 @@ const MainNav: React.FC<MainNavProps> = ({ data }) => {
         <div className="fixed inset-0 z-50 bg-white md:hidden">
           <div className="flex flex-col h-full">
             <div className="flex justify-between items-center p-4 border-b">
-              <Link href="/" className="text-xl font-bold" onClick={() => setIsOpen(false)}>
+              <Link
+                href="/"
+                className="text-xl font-bold"
+                onClick={() => setIsOpen(false)}
+              >
                 Logo
               </Link>
               <button
@@ -116,4 +114,3 @@ const MainNav: React.FC<MainNavProps> = ({ data }) => {
 };
 
 export default MainNav;
-
