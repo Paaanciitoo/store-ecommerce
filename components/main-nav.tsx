@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Category } from "@/types";
 import Link from "next/link";
@@ -21,49 +21,93 @@ const MainNav: React.FC<MainNavProps> = ({ data }) => {
     active: pathname === `/categorias/${route.id}`,
   }));
 
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   return (
-    <nav className="relative w-full">
-      {/* Botón de menú para pantallas md y menores */}
-      <button 
-        className="md:hidden p-2 ml-auto mr-4 w-auto flex justify-end"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        {isOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
+    <nav className="relative w-full bg-white shadow-md">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          <div className="flex-shrink-0 flex items-center">
+            <Link href="/" className="text-xl font-bold">
+              Logo
+            </Link>
+          </div>
 
-      {/* Menú para pantallas mayores a md */}
-      <div className="hidden md:flex mx-6 items-center space-x-4 lg:space-x-6 flex-wrap">
-        {routes.map((route) => (
-          <Link
-            key={route.href}
-            href={route.href}
-            className={cn(
-              "text-sm font-medium transition-colors hover:text-black py-2",
-              route.active ? "text-black" : "text-gray-500"
-            )}
-          >
-            {route.label}
-          </Link>
-        ))}
-      </div>
-
-      {/* Menú desplegable para pantallas md y menores */}
-      {isOpen && (
-        <div className="absolute top-full left-0 right-0 bg-white border-b md:hidden z-50">
-          <div className="flex flex-col space-y-2 p-4">
+          <div className="hidden md:flex items-center space-x-4">
             {routes.map((route) => (
               <Link
                 key={route.href}
                 href={route.href}
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-black py-2",
+                  "text-sm font-medium transition-colors hover:text-black",
                   route.active ? "text-black" : "text-gray-500"
                 )}
-                onClick={() => setIsOpen(false)}
               >
                 {route.label}
               </Link>
             ))}
+          </div>
+
+          <div className="md:hidden">
+            <button
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-black hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-black"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              <span className="sr-only">Abrir menú principal</span>
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {isOpen && (
+        <div className="fixed inset-0 z-50 bg-white md:hidden">
+          <div className="flex flex-col h-full">
+            <div className="flex justify-between items-center p-4 border-b">
+              <Link href="/" className="text-xl font-bold" onClick={() => setIsOpen(false)}>
+                Logo
+              </Link>
+              <button
+                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-black hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-black"
+                onClick={() => setIsOpen(false)}
+              >
+                <span className="sr-only">Cerrar menú</span>
+                <X size={24} />
+              </button>
+            </div>
+            <div className="flex-grow overflow-y-auto">
+              <div className="flex flex-col p-4 space-y-2">
+                {routes.map((route) => (
+                  <Link
+                    key={route.href}
+                    href={route.href}
+                    className={cn(
+                      "text-lg font-medium py-2 px-4 rounded-md transition-colors",
+                      route.active
+                        ? "text-white bg-black"
+                        : "text-gray-500 hover:text-black hover:bg-gray-100"
+                    )}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {route.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -72,3 +116,4 @@ const MainNav: React.FC<MainNavProps> = ({ data }) => {
 };
 
 export default MainNav;
+
