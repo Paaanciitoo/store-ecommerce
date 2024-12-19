@@ -8,13 +8,7 @@ import NoResults from "@/components/ui/no-results";
 import ProductCard from "@/components/ui/product-card";
 import MobileFilters from "./components/mobile-filters";
 import Filter from "./components/filter";
-import {
-  PawPrintIcon,
-  FilterIcon,
-  PackageIcon,
-  ScaleIcon as ScalesIcon,
-  PaletteIcon,
-} from "lucide-react";
+import { PawPrintIcon, FilterIcon, PackageIcon, ScaleIcon as ScalesIcon, PaletteIcon } from 'lucide-react';
 
 export const revalidate = 0;
 
@@ -94,14 +88,18 @@ const CategoriaPage: React.FC<CategoriaPageProps> = async ({
                     >
                       <ProductCard data={item} />
                       <div className="p-4">
-                        <p className="text-gray-600 mb-2 flex items-center">
-                          <ScalesIcon className="mr-1 h-4 w-4 text-blue-500" />
-                          Peso: {item.pesos.name}
-                        </p>
-                        <p className="text-gray-600 mb-2 flex items-center">
-                          <PaletteIcon className="mr-1 h-4 w-4 text-green-500" />
-                          Color: {item.colores.name}
-                        </p>
+                        {item.pesos.name !== "Sin peso" && (
+                          <p className="text-gray-600 font-bold text-lg mb-2 flex items-center">
+                            <ScalesIcon className="mr-1 h-4 w-4 text-blue-500" />
+                            Peso: {item.pesos.name}
+                          </p>
+                        )}
+                        {item.colores.name !== "Sin color" && (
+                          <p className="text-gray-600 font-bold text-lg mb-2 flex items-center">
+                            <PaletteIcon className="mr-1 h-4 w-4 text-green-500" />
+                            Color: {item.colores.name}
+                          </p>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -116,3 +114,4 @@ const CategoriaPage: React.FC<CategoriaPageProps> = async ({
 };
 
 export default CategoriaPage;
+
