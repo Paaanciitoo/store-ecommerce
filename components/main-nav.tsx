@@ -5,21 +5,35 @@ import { cn } from "@/lib/utils";
 import { Category } from "@/types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X } from 'lucide-react';
 
 interface MainNavProps {
-  data: Category[];
+  initialData: Category[];
 }
 
-const MainNav: React.FC<MainNavProps> = ({ data }) => {
+const MainNav: React.FC<MainNavProps> = ({ initialData }) => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [categories, setCategories] = useState<Category[]>(initialData);
 
-  const routes = data.map((route) => ({
-    href: `/categorias/${route.id}`,
-    label: route.name,
-    active: pathname === `/categorias/${route.id}`,
-  }));
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const response = await fetch('/api/categories');
+        if (!response.ok) {
+          throw new Error('Failed to fetch categories');
+        }
+        const data = await response.json();
+        setCategories(data);
+      } catch (error) {
+        console.error('Error loading categories:', error);
+        // Fallback to initial data if API call fails
+        setCategories(initialData);
+      }
+    };
+
+    loadCategories();
+  }, [initialData]);
 
   useEffect(() => {
     if (isOpen) {
@@ -33,9 +47,14 @@ const MainNav: React.FC<MainNavProps> = ({ data }) => {
     };
   }, [isOpen]);
 
+  const routes = categories.map((route) => ({
+    href: `/categorias/${route.id}`,
+    label: route.name,
+    active: pathname === `/categorias/${route.id}`,
+  }));
+
   return (
     <nav className="relative w-full">
-      {/* Botón de menú para pantallas md y menores */}
       <button
         className="md:hidden p-2 ml-auto mr-4 w-auto flex justify-end"
         onClick={() => setIsOpen(!isOpen)}
@@ -44,7 +63,6 @@ const MainNav: React.FC<MainNavProps> = ({ data }) => {
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
-      {/* Menú para pantallas mayores a md */}
       <div className="hidden md:flex mx-6 items-center space-x-4 lg:space-x-6 flex-wrap">
         {routes.map((route) => (
           <Link
@@ -60,7 +78,6 @@ const MainNav: React.FC<MainNavProps> = ({ data }) => {
         ))}
       </div>
 
-      {/* Menú desplegable para pantallas md y menores */}
       {isOpen && (
         <div className="fixed inset-0 bg-white z-50 md:hidden overflow-y-auto">
           <div className="flex flex-col h-full">
@@ -96,3 +113,4 @@ const MainNav: React.FC<MainNavProps> = ({ data }) => {
 };
 
 export default MainNav;
+

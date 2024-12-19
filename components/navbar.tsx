@@ -29,9 +29,7 @@ const Navbar = async () => {
           <Suspense fallback={
             <div className="h-4 w-64 bg-gray-200 animate-pulse rounded-full"></div>
           }>
-            <div className="hidden md:block">
-              <MainNav data={categorias} />
-            </div>
+            <MainNav initialData={categorias} />
           </Suspense>
           <Suspense fallback={
             <div className="flex space-x-4">
@@ -43,13 +41,6 @@ const Navbar = async () => {
           </Suspense>
         </div>
       </Container>
-      <Suspense fallback={
-        <div className="h-12 bg-gray-100 animate-pulse"></div>
-      }>
-        <div className="md:hidden overflow-x-auto">
-          <MainNav data={categorias} />
-        </div>
-      </Suspense>
     </div>
   );
 };
